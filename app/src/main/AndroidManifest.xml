@@ -2,19 +2,30 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.justinchou.cheyilian">
 
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
+
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
     <application
+        android:name="com.example.justinchou.cheyilian.CheyilianApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ProfileActivity">
+        <activity android:name=".activity.BindActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.StartActivity"/>
+        <activity android:name=".activity.CarStateActivity" android:launchMode="singleTask"/>
+        <activity android:name=".activity.SettingActivity"/>
+        <activity android:name=".activity.ProfileActivity"/>
+        <service android:name=".service.BluetoothLeService" android:enabled="true"/>
     </application>
 
 </manifest>
