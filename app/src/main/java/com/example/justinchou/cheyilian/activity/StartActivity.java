@@ -1,7 +1,11 @@
 package com.example.justinchou.cheyilian.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+
+import com.example.justinchou.cheyilian.R;
 
 /**
  * Created by Justin Chou on 2016/4/17.
@@ -9,8 +13,22 @@ import android.os.Bundle;
  */
 public class StartActivity extends Activity {
 
+    private Handler mHandler;
+    private static final int DELAY_TIME = 2000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.start);
+
+        mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(StartActivity.this, BindActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, DELAY_TIME);
     }
 }

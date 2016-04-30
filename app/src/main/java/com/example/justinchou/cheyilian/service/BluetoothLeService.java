@@ -27,6 +27,7 @@ import java.util.UUID;
  * given Bluetooth LE device.
  */
 public class BluetoothLeService extends Service {
+
     private final static String TAG = BluetoothLeService.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
@@ -268,7 +269,7 @@ public class BluetoothLeService extends Service {
 
         characteristic.setValue(value);
         boolean status = mBluetoothGatt.writeCharacteristic(characteristic);
-        Log.e(TAG, "!!!!!write : " + new String(value));
+        Log.e(TAG, "Write : " + new String(value));
         return status;
     }
 

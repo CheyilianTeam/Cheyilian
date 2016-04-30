@@ -5,8 +5,24 @@
     <string name="error_bluetooth_not_supported">不支持蓝牙</string>
     <string name="car_speed">车速</string>
     <string name="rotating_speed">转速</string>
-    <string name="car_speed_unit">km/h</string>
-    <string name="rotating_speed_unit">rpm/min</string>
+    <string name="speed_unit">km/h</string>
+    <string name="rotating_speed_unit">转/分</string>
     <string name="setting">设置</string>
     <string name="profile">个人中心</string>
+    <!--setting layout-->
+    <string name="obd_device">OBD设备</string>
+    <string name="device_operation">设备开启/关闭</string>
+    <string name="auto_control">自动控制</string>
+    <string name="rotating_speed_control">转速控制</string>
+    <string name="car_speed_control">车速控制</string>
+    <string name="throttling_valve_control">节气门控制</string>
+    <string name="auto_open">自动开启</string>
+    <string name="connected">已连接</string>
+    <string name="disconnected">未连接</string>
+    <!--login layout-->
+    <string name="enter_phone_number">请输入手机号</string>
+    <string name="enter_password">请输入密码</string>
+    <string name="login">登陆</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="register_account">注册新账号</string>
 </resources>

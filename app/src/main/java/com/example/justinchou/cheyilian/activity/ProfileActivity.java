@@ -10,6 +10,7 @@ import com.example.justinchou.cheyilian.model.User;
 
 /**
  * Created by Justin Chou on 2016/4/17.
+ * Show user profile, can be modified.
  */
 public class ProfileActivity extends Activity {
 

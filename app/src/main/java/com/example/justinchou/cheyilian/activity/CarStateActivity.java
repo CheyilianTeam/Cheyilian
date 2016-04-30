@@ -18,9 +18,11 @@ import android.widget.Button;
 import com.example.justinchou.cheyilian.CheyilianApplication;
 import com.example.justinchou.cheyilian.R;
 import com.example.justinchou.cheyilian.service.BluetoothLeService;
+import com.example.justinchou.cheyilian.util.Util;
 
 /**
  * Created by J on 2016/4/23.
+ * Show car speed, rotating speed, car speed, throttling valve.
  */
 public class CarStateActivity extends Activity {
 
@@ -71,14 +73,29 @@ public class CarStateActivity extends Activity {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
-                invalidateOptionsMenu();
+//                invalidateOptionsMenu();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
-                invalidateOptionsMenu();
+//                invalidateOptionsMenu();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-
+                if(mBluetoothLeService != null) {
+                    for(BluetoothGattService temp : mBluetoothLeService.getSupportedGattServices()) {
+                        if (temp.getUuid().toString().equals(Util.SERVICE_UUID)) {
+                            mPrimaryService = temp;
+                            break;
+                        }
+                    }
+                    for(BluetoothGattCharacteristic temp : mPrimaryService.getCharacteristics()) {
+                        if (temp.getUuid().toString().equals(Util.NOTIFICATION_UUID)) {
+                            mNotifyCharacteristic = temp;
+                            mBluetoothLeService.setCharacteristicNotification(temp, false);
+                            mBluetoothLeService.setCharacteristicNotification(temp, true);
+                            break;
+                        }
+                    }
+                }
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-
+                Log.e("Receive data", intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             }
         }
     };

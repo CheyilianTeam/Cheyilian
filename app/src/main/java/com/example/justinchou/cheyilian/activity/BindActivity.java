@@ -80,12 +80,12 @@ public class BindActivity extends ListActivity {
             }
         }
 
-        // refresh device list
+        // refresh the device list
         swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                scanLeDevice(true);
+                if (!mScanning) scanLeDevice(true);
                 swipeLayout.setRefreshing(false);
             }
         });
@@ -145,7 +145,6 @@ public class BindActivity extends ListActivity {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
-        invalidateOptionsMenu();
     }
 
     // Adapter for holding devices found through scanning.
