@@ -1,7 +1,6 @@
 package com.example.justinchou.cheyilian.activity;
 
 import android.app.Activity;
-import android.app.ListActivity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -11,15 +10,19 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.justinchou.cheyilian.CheyilianApplication;
 import com.example.justinchou.cheyilian.R;
+import com.example.justinchou.cheyilian.util.Util;
 
 import java.util.ArrayList;
 
@@ -27,17 +30,19 @@ import java.util.ArrayList;
  * Created by Justin Chou on 2016/4/17.
  * List all devices, select device and connect.
  */
-public class BindActivity extends ListActivity {
+public class BindActivity extends BaseActivity {
 
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
     private Handler mHandler;
+
     private SwipeRefreshLayout swipeLayout;
+    private ListView lvDeviceList;
 
     private static final int REQUEST_ENABLE_BT = 1;
-    // Stops scanning after 5 seconds.
-    private static final long SCAN_PERIOD = 5000;
+    // Stops scanning after 2 seconds.
+    private static final long SCAN_PERIOD = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +70,9 @@ public class BindActivity extends ListActivity {
             finish();
             return;
         }
+
+        lvDeviceList = (ListView) findViewById(R.id.list_device);
+        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
     }
 
     @Override
@@ -81,18 +89,32 @@ public class BindActivity extends ListActivity {
         }
 
         // refresh the device list
-        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (!mScanning) scanLeDevice(true);
-                swipeLayout.setRefreshing(false);
             }
         });
 
         // Initializes list view adapter.
         mLeDeviceListAdapter = new LeDeviceListAdapter();
-        setListAdapter(mLeDeviceListAdapter);
+        lvDeviceList.setAdapter(mLeDeviceListAdapter);
+        lvDeviceList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
+                if (device == null) return;
+                Intent intent = new Intent(CheyilianApplication.getContext(), CarStateActivity.class);
+                intent.putExtra(CarStateActivity.EXTRAS_DEVICE_NAME, device.getName());
+                intent.putExtra(CarStateActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+                if (mScanning) {
+                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
+                    mScanning = false;
+                }
+                startActivity(intent);
+            }
+        });
+
         scanLeDevice(true);
     }
 
@@ -113,20 +135,6 @@ public class BindActivity extends ListActivity {
         mLeDeviceListAdapter.clear();
     }
 
-    @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
-        if (device == null) return;
-        final Intent intent = new Intent(this, CarStateActivity.class);
-        intent.putExtra(CarStateActivity.EXTRAS_DEVICE_NAME, device.getName());
-        intent.putExtra(CarStateActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
-        if (mScanning) {
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            mScanning = false;
-        }
-        startActivity(intent);
-    }
-
     private void scanLeDevice(final boolean enable) {
         if (enable) {
             // Stops scanning after a pre-defined scan period.
@@ -134,15 +142,18 @@ public class BindActivity extends ListActivity {
                 @Override
                 public void run() {
                     mScanning = false;
+                    swipeLayout.setRefreshing(false);
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
                     invalidateOptionsMenu();
                 }
             }, SCAN_PERIOD);
 
             mScanning = true;
+            swipeLayout.setRefreshing(true);
             mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
             mScanning = false;
+            swipeLayout.setRefreshing(false);
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
     }
@@ -220,16 +231,19 @@ public class BindActivity extends ListActivity {
     }
 
     // Device scan callback.
+    // Select device via scan record
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
 
                 @Override
-                public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
+                public void onLeScan(final BluetoothDevice device, int rssi, final byte[] scanRecord) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mLeDeviceListAdapter.addDevice(device);
-                            mLeDeviceListAdapter.notifyDataSetChanged();
+                            if (Util.scanValidation(scanRecord)) {
+                                mLeDeviceListAdapter.addDevice(device);
+                                mLeDeviceListAdapter.notifyDataSetChanged();
+                            }
                         }
                     });
                 }

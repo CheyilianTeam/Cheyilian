@@ -266,6 +266,9 @@ public class BluetoothLeService extends Service {
         }
 
         byte[] value = new byte[20];
+        for (int i = 0; i < 20; i ++) {
+            value[i] = (byte) message.charAt(i);
+        }
 
         characteristic.setValue(value);
         boolean status = mBluetoothGatt.writeCharacteristic(characteristic);
@@ -288,7 +291,7 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
         BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
-                UUID.fromString(Util.NOTIFICATION_UUID));
+                UUID.fromString(Util.NOTIFICATION_DESCRIPTOR));
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
     }

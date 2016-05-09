@@ -12,7 +12,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -25,9 +24,10 @@ import okhttp3.Response;
  */
 public class Util {
 
-    public static final String SERVICE_UUID = "";
-    public static final String CHARACTERISTIC_UUID = "";
-    public static final String NOTIFICATION_UUID = "";
+    public static final String SERVICE_UUID = "0000fff0-0000-1000-8000-00805f9b34fb";
+    public static final String CHARACTERISTIC_UUID = "0000fff1-0000-1000-8000-00805f9b34fb";
+    public static final String NOTIFICATION_UUID = "0000fff7-0000-1000-8000-00805f9b34fb";
+    public static final String NOTIFICATION_DESCRIPTOR = "00002902-0000-1000-8000-00805f9b34fb";
 
     public static final int SUCCESS_MESSAGE = 0;
     public static final int ERROR_MESSAGE = 1;
@@ -85,6 +85,11 @@ public class Util {
                 }
             }).start();
         } else sendMessage(handler, ERROR_MESSAGE, "没有网络");
+    }
+
+    public static boolean scanValidation(byte[] scanRecord) {
+        if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
+        return false;
     }
 
 }

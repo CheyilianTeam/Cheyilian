@@ -12,7 +12,9 @@ public class Obd extends BaseObservable {
     private String deviceName;
     private String deviceNumber;
     private String rotatingSpeed;
+    private String targetRotatingSpeed;
     private String carSpeed;
+    private String targetCarSpeed;
     private String throttlingValue;
 
     @Bindable

@@ -1,6 +1,5 @@
 package com.example.justinchou.cheyilian.activity;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -14,6 +13,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.justinchou.cheyilian.CheyilianApplication;
 import com.example.justinchou.cheyilian.R;
@@ -24,7 +24,7 @@ import com.example.justinchou.cheyilian.util.Util;
  * Created by J on 2016/4/23.
  * Show car speed, rotating speed, car speed, throttling valve.
  */
-public class CarStateActivity extends Activity {
+public class CarStateActivity extends BaseActivity {
 
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
@@ -86,6 +86,12 @@ public class CarStateActivity extends Activity {
                         }
                     }
                     for(BluetoothGattCharacteristic temp : mPrimaryService.getCharacteristics()) {
+                        Log.e("temp", temp.getUuid().toString());
+                        if (temp.getUuid().toString().equals(Util.CHARACTERISTIC_UUID)) {
+                            mPrimaryCharacteristic = temp;
+                            mBluetoothLeService.writeCharacteristic(mPrimaryCharacteristic, "hhh");
+                            break;
+                        }
                         if (temp.getUuid().toString().equals(Util.NOTIFICATION_UUID)) {
                             mNotifyCharacteristic = temp;
                             mBluetoothLeService.setCharacteristicNotification(temp, false);
@@ -108,13 +114,18 @@ public class CarStateActivity extends Activity {
         btnProfile = (Button) findViewById(R.id.btn_profile);
         btnSetting = (Button) findViewById(R.id.btn_setting);
 
+        final Intent intent = getIntent();
+        mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
+        mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
+
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(CheyilianApplication.getContext(), ProfileActivity.class);
+                startActivity(intent);
             }
         });
 

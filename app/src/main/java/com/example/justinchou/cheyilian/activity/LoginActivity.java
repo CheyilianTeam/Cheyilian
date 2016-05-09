@@ -1,6 +1,5 @@
 package com.example.justinchou.cheyilian.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,7 +19,7 @@ import java.util.Map;
  * Created by J on 2016/4/28.
  * Login script
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends BaseActivity {
 
     private Handler mHandler;
 
