@@ -20,6 +20,9 @@ import com.example.justinchou.cheyilian.R;
 import com.example.justinchou.cheyilian.service.BluetoothLeService;
 import com.example.justinchou.cheyilian.util.Util;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by J on 2016/4/23.
  * Show car speed, rotating speed, car speed, throttling valve.
@@ -38,8 +41,10 @@ public class CarStateActivity extends BaseActivity {
     private String mDeviceName;
     private String mDeviceAddress;
 
-    private Button btnProfile;
-    private Button btnSetting;
+    @InjectView(R.id.btn_profile)
+    Button btnProfile;
+    @InjectView(R.id.btn_setting)
+    Button btnSetting;
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -89,7 +94,6 @@ public class CarStateActivity extends BaseActivity {
                         Log.e("temp", temp.getUuid().toString());
                         if (temp.getUuid().toString().equals(Util.CHARACTERISTIC_UUID)) {
                             mPrimaryCharacteristic = temp;
-                            mBluetoothLeService.writeCharacteristic(mPrimaryCharacteristic, "hhh");
                             break;
                         }
                         if (temp.getUuid().toString().equals(Util.NOTIFICATION_UUID)) {
@@ -111,8 +115,7 @@ public class CarStateActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.car_state);
 
-        btnProfile = (Button) findViewById(R.id.btn_profile);
-        btnSetting = (Button) findViewById(R.id.btn_setting);
+        ButterKnife.inject(this);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);

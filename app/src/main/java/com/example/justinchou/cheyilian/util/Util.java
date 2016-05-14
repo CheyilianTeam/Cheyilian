@@ -88,8 +88,9 @@ public class Util {
     }
 
     public static boolean scanValidation(byte[] scanRecord) {
-        if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
-        return false;
+//        if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
+//        return false;
+        return true;
     }
 
 }

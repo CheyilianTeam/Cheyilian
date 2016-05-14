@@ -10,7 +10,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +25,9 @@ import com.example.justinchou.cheyilian.util.Util;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by Justin Chou on 2016/4/17.
  * List all devices, select device and connect.
@@ -37,8 +39,10 @@ public class BindActivity extends BaseActivity {
     private boolean mScanning;
     private Handler mHandler;
 
-    private SwipeRefreshLayout swipeLayout;
-    private ListView lvDeviceList;
+    @InjectView(R.id.swipe_refresh)
+    SwipeRefreshLayout swipeLayout;
+    @InjectView(R.id.list_device)
+    ListView lvDeviceList;
 
     private static final int REQUEST_ENABLE_BT = 1;
     // Stops scanning after 2 seconds.
@@ -48,6 +52,8 @@ public class BindActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.device_list);
+
+        ButterKnife.inject(this);
 
         mHandler = new Handler();
 
@@ -70,9 +76,6 @@ public class BindActivity extends BaseActivity {
             finish();
             return;
         }
-
-        lvDeviceList = (ListView) findViewById(R.id.list_device);
-        swipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
     }
 
     @Override

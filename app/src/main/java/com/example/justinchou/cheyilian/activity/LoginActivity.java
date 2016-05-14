@@ -15,6 +15,9 @@ import com.example.justinchou.cheyilian.util.Util;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by J on 2016/4/28.
  * Login script
@@ -23,14 +26,19 @@ public class LoginActivity extends BaseActivity {
 
     private Handler mHandler;
 
-    private EditText etPhoneNumber;
-    private EditText etPassword;
-    private Button btnLogin;
+    @InjectView(R.id.et_phone_number)
+    EditText etPhoneNumber;
+    @InjectView(R.id.et_password)
+    EditText etPassword;
+    @InjectView(R.id.btn_login)
+    Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+        ButterKnife.inject(this);
 
         mHandler = new Handler() {
             @Override
@@ -39,10 +47,6 @@ public class LoginActivity extends BaseActivity {
                 else Toast.makeText(CheyilianApplication.getContext(), msg.obj.toString(), Toast.LENGTH_SHORT).show();
             }
         };
-
-        etPhoneNumber = (EditText) findViewById(R.id.et_phone_number);
-        etPassword = (EditText) findViewById(R.id.et_password);
-        btnLogin = (Button) findViewById(R.id.btn_login);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
