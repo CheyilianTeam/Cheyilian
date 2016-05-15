@@ -52,10 +52,70 @@ public class SettingActivity extends BaseActivity {
 
         ButterKnife.inject(this);
 
+        swDeviceOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                try {
+                    JSONObject message = new JSONObject();
+                    message.put(Util.CONTROL_COMMAND, Util.COMMAND_ON);
+                    CarStateActivity.sendBleMessage(message.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        swDeviceOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                try {
+                    JSONObject message = new JSONObject();
+                    message.put(Util.CONTROL_COMMAND, Util.COMMAND_OFF);
+                    CarStateActivity.sendBleMessage(message.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         swAutoControl.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                if (isChecked) {
+                    if (cbRotatingSpeedControl.isChecked() || cbCarSpeedControl.isChecked() || cbThrottlingValveControl.isChecked()) {
+                        try {
+                            if (cbRotatingSpeedControl.isChecked()) {
+                                String targetRotatingSpeed = etRotatingSpeed.getText().toString();
+                                Util.savePreference(Util.TARGET_ROTATING_SPEED, targetRotatingSpeed);
+                                JSONObject message = new JSONObject();
+                                message.put(Util.TRANSFER_DATA, Util.ROTATING_SPEED_CONTROL);
+                                message.put(Util.VALUE_TRANSFERED, targetRotatingSpeed);
+                                CarStateActivity.sendBleMessage(message.toString());
+                            }
+                            if (cbCarSpeedControl.isChecked()) {
+                                String targetCarSpeed = etCarSpeed.getText().toString();
+                                Util.savePreference(Util.TARGET_CAR_SPEED, targetCarSpeed);
+                                JSONObject message = new JSONObject();
+                                message.put(Util.TRANSFER_DATA, Util.CAR_SPEED_CONTROL);
+                                message.put(Util.VALUE_TRANSFERED, targetCarSpeed);
+                                CarStateActivity.sendBleMessage(message.toString());
+                            }
+                            if (cbThrottlingValveControl.isChecked()) {
+                                String targetThrottlingValve = etThrottlingValve.getText().toString();
+                                Util.savePreference(Util.TARGET_THROTTLING_VALUE, targetThrottlingValve);
+                                JSONObject message = new JSONObject();
+                                message.put(Util.TRANSFER_DATA, Util.THROTTLING_VALUE_CONTROL);
+                                message.put(Util.VALUE_TRANSFERED, targetThrottlingValve);
+                                CarStateActivity.sendBleMessage(message.toString());
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(CheyilianApplication.getContext(), "请选择控制模式", Toast.LENGTH_SHORT).show();
+                        swAutoControl.setChecked(false);
+                    }
+                }
             }
         });
     }
@@ -63,5 +123,7 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        txtConnectionState.setText(Util.getPreference(Util.CONNECTION_STATE));
     }
 }

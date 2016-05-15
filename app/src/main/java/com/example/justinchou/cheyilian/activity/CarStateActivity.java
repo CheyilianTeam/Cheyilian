@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -17,8 +18,13 @@ import android.widget.Toast;
 
 import com.example.justinchou.cheyilian.CheyilianApplication;
 import com.example.justinchou.cheyilian.R;
+import com.example.justinchou.cheyilian.databinding.CarStateBinding;
+import com.example.justinchou.cheyilian.model.Obd;
 import com.example.justinchou.cheyilian.service.BluetoothLeService;
 import com.example.justinchou.cheyilian.util.Util;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -40,6 +46,9 @@ public class CarStateActivity extends BaseActivity {
     private static BluetoothLeService mBluetoothLeService;
     private String mDeviceName;
     private String mDeviceAddress;
+
+    private Obd obdDevice;
+    private CarStateBinding binding;
 
     @InjectView(R.id.btn_profile)
     Button btnProfile;
@@ -78,10 +87,10 @@ public class CarStateActivity extends BaseActivity {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
-//                invalidateOptionsMenu();
+                Util.savePreference(Util.CONNECTION_STATE, Util.STATE_CONNECTED);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
-//                invalidateOptionsMenu();
+                Util.savePreference(Util.CONNECTION_STATE, Util.STATE_DISCONNECTED);
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 Log.i("CarStateActivity", "Service discovered");
                 if(mBluetoothLeService != null) {
@@ -104,7 +113,29 @@ public class CarStateActivity extends BaseActivity {
                     }
                 }
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                Log.i("CarStateActivity", "Data Received: " + intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                String received = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+                Log.i("CarStateActivity", "Data Received: " + received);
+                try {
+                    JSONObject message = new JSONObject(received);
+                    int type = message.getInt(Util.TRANSFER_DATA);
+                    double value = message.getDouble(Util.VALUE_TRANSFERED);
+                    switch (type) {
+                        case Util.ROTATING_SPEED_CONTROL:
+                            Util.savePreference(Util.ROTATING_SPEED, Double.toString(value));
+                            obdDevice.setRotatingSpeed(Double.toString(value));
+                            break;
+                        case Util.CAR_SPEED_CONTROL:
+                            Util.savePreference(Util.CAR_SPEED, Double.toString(value));
+                            obdDevice.setCarSpeed(Double.toString(value));
+                            break;
+                        case Util.THROTTLING_VALUE_CONTROL:
+                            Util.savePreference(Util.THROTTLING_VALUE, Double.toString(value));
+                            obdDevice.setTargetCarSpeed(Double.toString(value));
+                            break;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
@@ -113,7 +144,7 @@ public class CarStateActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.car_state);
+        binding = DataBindingUtil.setContentView(this, R.layout.car_state);
 
         ButterKnife.inject(this);
 
@@ -144,6 +175,11 @@ public class CarStateActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // data binding
+        obdDevice = new Obd();
+        binding.setObd(obdDevice);
+        obdDevice.setCarSpeed(Util.getPreference(Util.CAR_SPEED));
 
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {

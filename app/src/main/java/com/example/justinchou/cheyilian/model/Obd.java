@@ -62,4 +62,31 @@ public class Obd extends BaseObservable {
     public void setThrottlingValue(String throttlingValue) {
         this.throttlingValue = throttlingValue;
     }
+
+    @Bindable
+    public String getTargetRotatingSpeed() {
+        return targetRotatingSpeed;
+    }
+
+    public void setTargetRotatingSpeed(String targetRotatingSpeed) {
+        this.targetRotatingSpeed = targetRotatingSpeed;
+    }
+
+    @Bindable
+    public String getTargetCarSpeed() {
+        return targetCarSpeed;
+    }
+
+    public void setTargetCarSpeed(String targetCarSpeed) {
+        this.targetCarSpeed = targetCarSpeed;
+    }
+
+    @Bindable
+    public String getTargetThrottlingValue() {
+        return targetThrottlingValue;
+    }
+
+    public void setTargetThrottlingValue(String targetThrottlingValue) {
+        this.targetThrottlingValue = targetThrottlingValue;
+    }
 }

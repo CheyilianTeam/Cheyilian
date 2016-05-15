@@ -1,7 +1,7 @@
 package com.example.justinchou.cheyilian.activity;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.justinchou.cheyilian.util.ActivityCollector;
@@ -9,7 +9,7 @@ import com.example.justinchou.cheyilian.util.ActivityCollector;
 /**
  * Created by J on 2016/5/8.
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

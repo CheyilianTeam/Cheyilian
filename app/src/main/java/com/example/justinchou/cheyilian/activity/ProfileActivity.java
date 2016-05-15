@@ -22,5 +22,6 @@ public class ProfileActivity extends BaseActivity {
         user.setUserName("zzy");
         user.setPhoneNumber("15850537201");
         binding.setUser(user);
+        user.setDeviceNumber("fefe");
     }
 }

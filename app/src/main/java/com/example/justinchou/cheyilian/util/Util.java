@@ -25,14 +25,28 @@ import okhttp3.Response;
  */
 public class Util {
 
-    public static final String SEND_CONTROL_COMMAND = "A";
-    public static final String SEND_DATA = "B";
-    public static final String SET_ID = "C";
-    public static final String VALUE_SENT = "V";
+    public static final String CONNECTION_STATE = "connectionState";
+    public static final String STATE_CONNECTED = "connected";
+    public static final String STATE_DISCONNECTED = "disconnected";
 
+    public static final String CONTROL_COMMAND = "A";
+    public static final int COMMAND_ON = 0;
+    public static final int COMMAND_OFF = 1;
+
+    public static final String TRANSFER_DATA = "B";
+    public static final String SET_ID = "C";
+    public static final String VALUE_TRANSFERED = "V";
+
+    public static final String ROTATING_SPEED = "rotatingSpeed";
+    public static final String CAR_SPEED = "carSpeed";
+    public static final String THROTTLING_VALUE = "throttlingValue";
     public static final String TARGET_ROTATING_SPEED = "targetRotatingSpeed";
     public static final String TARGET_CAR_SPEED = "targetCarSpeed";
     public static final String TARGET_THROTTLING_VALUE = "targetThrottlingValue";
+
+    public static final int ROTATING_SPEED_CONTROL = 1;
+    public static final int CAR_SPEED_CONTROL = 2;
+    public static final int THROTTLING_VALUE_CONTROL = 3;
 
     public static final String SHAREDPREFERENCE_FILE_NAME = "com.example.justinchou.cheyilian.PREFERENCE";
 
@@ -102,6 +116,7 @@ public class Util {
     public static boolean scanValidation(byte[] scanRecord) {
         if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
         return false;
+//        return true;
     }
 
     public static String getPreference(String key) {
