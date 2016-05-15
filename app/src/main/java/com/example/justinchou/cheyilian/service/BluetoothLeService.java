@@ -256,23 +256,23 @@ public class BluetoothLeService extends Service {
 
         //check mBluetoothGatt is available
         if (mBluetoothGatt == null) {
-            Log.e(TAG, "lost connection");
+            Log.e(TAG, "Lose connection");
             return false;
         }
 
         if (characteristic == null) {
-            Log.e(TAG, "char not found!");
+            Log.e(TAG, "Char not found!");
             return false;
         }
 
         byte[] value = new byte[20];
-        for (int i = 0; i < 20; i ++) {
+        for (int i = 0; i < message.length(); i ++) {
             value[i] = (byte) message.charAt(i);
         }
 
         characteristic.setValue(value);
         boolean status = mBluetoothGatt.writeCharacteristic(characteristic);
-        Log.e(TAG, "Write : " + new String(value));
+        Log.e(TAG, "Write: " + new String(value));
         return status;
     }
 
@@ -294,6 +294,7 @@ public class BluetoothLeService extends Service {
                 UUID.fromString(Util.NOTIFICATION_DESCRIPTOR));
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
+        Log.i(TAG, "Notification set: " + characteristic.getUuid().toString());
     }
 
     /**

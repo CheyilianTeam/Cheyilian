@@ -15,13 +15,13 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityCollector.addActivity(this);
-        Log.e("BaseActivity", "add activity");
+        Log.i("BaseActivity", "add activity");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         ActivityCollector.removeActivity(this);
-        Log.e("BaseActivity", "remove activity");
+        Log.i("BaseActivity", "remove activity");
     }
 }

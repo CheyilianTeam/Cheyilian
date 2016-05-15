@@ -1,6 +1,7 @@
 package com.example.justinchou.cheyilian.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -23,6 +24,17 @@ import okhttp3.Response;
  * Created by J on 2016/4/21.
  */
 public class Util {
+
+    public static final String SEND_CONTROL_COMMAND = "A";
+    public static final String SEND_DATA = "B";
+    public static final String SET_ID = "C";
+    public static final String VALUE_SENT = "V";
+
+    public static final String TARGET_ROTATING_SPEED = "targetRotatingSpeed";
+    public static final String TARGET_CAR_SPEED = "targetCarSpeed";
+    public static final String TARGET_THROTTLING_VALUE = "targetThrottlingValue";
+
+    public static final String SHAREDPREFERENCE_FILE_NAME = "com.example.justinchou.cheyilian.PREFERENCE";
 
     public static final String SERVICE_UUID = "0000fff0-0000-1000-8000-00805f9b34fb";
     public static final String CHARACTERISTIC_UUID = "0000fff1-0000-1000-8000-00805f9b34fb";
@@ -88,9 +100,19 @@ public class Util {
     }
 
     public static boolean scanValidation(byte[] scanRecord) {
-//        if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
-//        return false;
-        return true;
+        if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
+        return false;
+    }
+
+    public static String getPreference(String key) {
+        SharedPreferences pref = CheyilianApplication.getContext().getSharedPreferences(SHAREDPREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
+        return pref.getString(key, "none");
+    }
+
+    public static void savePreference(String key, String value) {
+        SharedPreferences.Editor editor = CheyilianApplication.getContext().getSharedPreferences(SHAREDPREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(key, value);
+        editor.commit();
     }
 
 }

@@ -11,7 +11,8 @@
     <string name="profile">个人中心</string>
     <!--setting layout-->
     <string name="obd_device">OBD设备</string>
-    <string name="device_operation">设备开启/关闭</string>
+    <string name="device_on">设备开启</string>
+    <string name="device_off">设备关闭</string>
     <string name="auto_control">自动控制</string>
     <string name="rotating_speed_control">转速控制</string>
     <string name="car_speed_control">车速控制</string>

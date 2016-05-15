@@ -34,10 +34,10 @@ public class CarStateActivity extends BaseActivity {
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
 
     private BluetoothGattService mPrimaryService;
-    private BluetoothGattCharacteristic mPrimaryCharacteristic;
+    private static BluetoothGattCharacteristic mPrimaryCharacteristic;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     private boolean mConnected = false;
-    private BluetoothLeService mBluetoothLeService;
+    private static BluetoothLeService mBluetoothLeService;
     private String mDeviceName;
     private String mDeviceAddress;
 
@@ -83,6 +83,7 @@ public class CarStateActivity extends BaseActivity {
                 mConnected = false;
 //                invalidateOptionsMenu();
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+                Log.i("CarStateActivity", "Service discovered");
                 if(mBluetoothLeService != null) {
                     for(BluetoothGattService temp : mBluetoothLeService.getSupportedGattServices()) {
                         if (temp.getUuid().toString().equals(Util.SERVICE_UUID)) {
@@ -91,21 +92,20 @@ public class CarStateActivity extends BaseActivity {
                         }
                     }
                     for(BluetoothGattCharacteristic temp : mPrimaryService.getCharacteristics()) {
-                        Log.e("temp", temp.getUuid().toString());
+                        Log.i("CarStateActivity", "Characteristic found: " + temp.getUuid().toString());
                         if (temp.getUuid().toString().equals(Util.CHARACTERISTIC_UUID)) {
                             mPrimaryCharacteristic = temp;
-                            break;
                         }
                         if (temp.getUuid().toString().equals(Util.NOTIFICATION_UUID)) {
                             mNotifyCharacteristic = temp;
                             mBluetoothLeService.setCharacteristicNotification(temp, false);
                             mBluetoothLeService.setCharacteristicNotification(temp, true);
-                            break;
                         }
                     }
                 }
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                Log.e("Receive data", intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+                Log.i("CarStateActivity", "Data Received: " + intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+
             }
         }
     };
@@ -172,6 +172,11 @@ public class CarStateActivity extends BaseActivity {
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
+    }
+
+    // use this to communicate with obd
+    public static void sendBleMessage(String message) {
+        mBluetoothLeService.writeCharacteristic(mPrimaryCharacteristic, message);
     }
 
 }
