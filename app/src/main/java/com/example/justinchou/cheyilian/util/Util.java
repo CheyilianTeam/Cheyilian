@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.example.justinchou.cheyilian.CheyilianApplication;
 
@@ -114,20 +115,23 @@ public class Util {
     }
 
     public static boolean scanValidation(byte[] scanRecord) {
-        if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
-        return false;
-//        return true;
+//        if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
+//        return false;
+        return true;
     }
 
     public static String getPreference(String key) {
         SharedPreferences pref = CheyilianApplication.getContext().getSharedPreferences(SHAREDPREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
-        return pref.getString(key, "none");
+        String value = pref.getString(key, "none");
+        Log.i("Util", "Get preference: " + value);
+        return value;
     }
 
     public static void savePreference(String key, String value) {
         SharedPreferences.Editor editor = CheyilianApplication.getContext().getSharedPreferences(SHAREDPREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
         editor.putString(key, value);
         editor.commit();
+        Log.i("Util", "Put preference: " + key + " " + value);
     }
 
 }

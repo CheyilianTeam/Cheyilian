@@ -20,18 +20,24 @@ public class DBService {
         db = helper.getWritableDatabase();
     }
 
-//    public void save(Obd obd) {
-//        if (null != find(obd.getName())) db.execSQL("INSERT INTO user VALUES (?, ?)",new String[]{user.getName(), Encryption.encrypt(user.getPassword())});
-//    }
+    public void save(Obd obd) {
+        if (null == find(obd.getDeviceNumber())) db.execSQL("INSERT INTO obd VALUES (?, ?, ?, ?, ?)",new String[]{obd.getDeviceName(), obd.getDeviceNumber(), obd.getTargetRotatingSpeed(), obd.getTargetCarSpeed(), obd.getTargetThrottlingValue()});
+        else db.execSQL("INSERT INTO obd VALUES (?, ?, ?, ?, ?)",new String[]{obd.getDeviceName(), obd.getDeviceNumber(), obd.getTargetRotatingSpeed(), obd.getTargetCarSpeed(), obd.getTargetThrottlingValue()});
+    }
 
-//    public Obd find(String name) {
-//        Obd user = null;
-//        Cursor cursor = db.rawQuery("SELECT * FROM user WHERE name = ?",new String[]{name});
-//        while(cursor.moveToNext()) {
-//            user = new Obd(cursor.getString(1), Encryption.decrypt(cursor.getString(2)));
-//        }
-//        cursor.close();
-//        return user;
-//    }
+    public Obd find(String deviceNumber) {
+        Obd obd = null;
+        Cursor cursor = db.rawQuery("SELECT * FROM obd WHERE deviceNumber = ?",new String[]{deviceNumber});
+        while(cursor.moveToNext()) {
+            obd = new Obd();
+            obd.setDeviceName(cursor.getString(2));
+            obd.setDeviceNumber(cursor.getString(3));
+            obd.setTargetRotatingSpeed(cursor.getString(4));
+            obd.setTargetCarSpeed(cursor.getString(5));
+            obd.setTargetThrottlingValue(cursor.getString(6));
+        }
+        cursor.close();
+        return obd;
+    }
 
 }

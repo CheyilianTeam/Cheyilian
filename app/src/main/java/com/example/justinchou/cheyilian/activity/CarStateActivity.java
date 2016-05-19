@@ -14,7 +14,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.example.justinchou.cheyilian.CheyilianApplication;
 import com.example.justinchou.cheyilian.R;
@@ -87,24 +86,26 @@ public class CarStateActivity extends BaseActivity {
             final String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
-                Util.savePreference(Util.CONNECTION_STATE, Util.STATE_CONNECTED);
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
-                Util.savePreference(Util.CONNECTION_STATE, Util.STATE_DISCONNECTED);
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 Log.i("CarStateActivity", "Service discovered");
                 if(mBluetoothLeService != null) {
+                    // Find the primary service
                     for(BluetoothGattService temp : mBluetoothLeService.getSupportedGattServices()) {
                         if (temp.getUuid().toString().equals(Util.SERVICE_UUID)) {
                             mPrimaryService = temp;
                             break;
                         }
                     }
+
                     for(BluetoothGattCharacteristic temp : mPrimaryService.getCharacteristics()) {
                         Log.i("CarStateActivity", "Characteristic found: " + temp.getUuid().toString());
+                        // Find the characteristic to communicate
                         if (temp.getUuid().toString().equals(Util.CHARACTERISTIC_UUID)) {
                             mPrimaryCharacteristic = temp;
                         }
+                        // Find the notification characteristic
                         if (temp.getUuid().toString().equals(Util.NOTIFICATION_UUID)) {
                             mNotifyCharacteristic = temp;
                             mBluetoothLeService.setCharacteristicNotification(temp, false);
@@ -144,6 +145,7 @@ public class CarStateActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = DataBindingUtil.setContentView(this, R.layout.car_state);
 
         ButterKnife.inject(this);
@@ -176,7 +178,7 @@ public class CarStateActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        // data binding
+        // Data binding
         obdDevice = new Obd();
         binding.setObd(obdDevice);
         obdDevice.setCarSpeed(Util.getPreference(Util.CAR_SPEED));
@@ -210,7 +212,7 @@ public class CarStateActivity extends BaseActivity {
         return intentFilter;
     }
 
-    // use this to communicate with obd
+    // Use this to communicate with obd
     public static void sendBleMessage(String message) {
         mBluetoothLeService.writeCharacteristic(mPrimaryCharacteristic, message);
     }

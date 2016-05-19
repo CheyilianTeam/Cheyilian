@@ -1,5 +1,9 @@
 package com.example.justinchou.cheyilian.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -10,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.justinchou.cheyilian.CheyilianApplication;
 import com.example.justinchou.cheyilian.R;
+import com.example.justinchou.cheyilian.service.BluetoothLeService;
 import com.example.justinchou.cheyilian.util.Util;
 
 import org.json.JSONException;
@@ -44,6 +49,20 @@ public class SettingActivity extends BaseActivity {
     CheckBox cbThrottlingValveControl;
     @InjectView(R.id.et_throttling_valve)
     EditText etThrottlingValve;
+
+    private final BroadcastReceiver mConnectionStateChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
+                Util.savePreference(Util.CONNECTION_STATE, Util.STATE_CONNECTED);
+                txtConnectionState.setText(Util.STATE_CONNECTED);
+            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                Util.savePreference(Util.CONNECTION_STATE, Util.STATE_DISCONNECTED);
+                txtConnectionState.setText(Util.STATE_DISCONNECTED);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +127,7 @@ public class SettingActivity extends BaseActivity {
                                 message.put(Util.VALUE_TRANSFERED, targetThrottlingValve);
                                 CarStateActivity.sendBleMessage(message.toString());
                             }
+                            Toast.makeText(CheyilianApplication.getContext(), "自动控制设置成功", Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -125,5 +145,20 @@ public class SettingActivity extends BaseActivity {
         super.onResume();
 
         txtConnectionState.setText(Util.getPreference(Util.CONNECTION_STATE));
+
+        registerReceiver(mConnectionStateChangeReceiver, connectionStateChangeFilter());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mConnectionStateChangeReceiver);
+    }
+
+    private static IntentFilter connectionStateChangeFilter() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
+        return intentFilter;
     }
 }

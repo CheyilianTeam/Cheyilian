@@ -261,7 +261,7 @@ public class BluetoothLeService extends Service {
         }
 
         if (characteristic == null) {
-            Log.e(TAG, "Char not found!");
+            Log.e(TAG, "Characteristic not found");
             return false;
         }
 
