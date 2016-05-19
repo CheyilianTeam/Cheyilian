@@ -22,7 +22,12 @@ public class DBService {
 
     public void save(Obd obd) {
         if (null == find(obd.getDeviceNumber())) db.execSQL("INSERT INTO obd VALUES (?, ?, ?, ?, ?)",new String[]{obd.getDeviceName(), obd.getDeviceNumber(), obd.getTargetRotatingSpeed(), obd.getTargetCarSpeed(), obd.getTargetThrottlingValue()});
-        else db.execSQL("INSERT INTO obd VALUES (?, ?, ?, ?, ?)",new String[]{obd.getDeviceName(), obd.getDeviceNumber(), obd.getTargetRotatingSpeed(), obd.getTargetCarSpeed(), obd.getTargetThrottlingValue()});
+        else {
+            String update = "UPDATE obd SET deviceName='" + obd.getDeviceName() + "', targetRotatingSpeed='" + obd.getRotatingSpeed() +
+                    "', targetCarSpeed='" + obd.getCarSpeed() + "', targetThrottlingValue" +
+                    obd.getTargetThrottlingValue() + "' WHERE deviceNumber='" + obd.getDeviceNumber() + "'";
+            db.execSQL(update);
+        }
     }
 
     public Obd find(String deviceNumber) {

@@ -38,6 +38,8 @@ public class Util {
     public static final String SET_ID = "C";
     public static final String VALUE_TRANSFERED = "V";
 
+    public static final String DEVICE_NAME = "deviceName";
+    public static final String DEVICE_NUMBER = "deviceNumber";
     public static final String ROTATING_SPEED = "rotatingSpeed";
     public static final String CAR_SPEED = "carSpeed";
     public static final String THROTTLING_VALUE = "throttlingValue";

@@ -20,6 +20,7 @@ import com.example.justinchou.cheyilian.R;
 import com.example.justinchou.cheyilian.databinding.CarStateBinding;
 import com.example.justinchou.cheyilian.model.Obd;
 import com.example.justinchou.cheyilian.service.BluetoothLeService;
+import com.example.justinchou.cheyilian.service.DBService;
 import com.example.justinchou.cheyilian.util.Util;
 
 import org.json.JSONException;
@@ -153,6 +154,17 @@ public class CarStateActivity extends BaseActivity {
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
         mDeviceAddress = intent.getStringExtra(EXTRAS_DEVICE_ADDRESS);
+
+        Util.savePreference(Util.DEVICE_NAME, mDeviceName);
+        Util.savePreference(Util.DEVICE_NUMBER, mDeviceAddress);
+
+        // Get data from the database
+        Obd obd = dbService.find(Util.getPreference(Util.DEVICE_NUMBER));
+        if (obd != null) {
+            Util.savePreference(Util.TARGET_ROTATING_SPEED, obd.getTargetRotatingSpeed());
+            Util.savePreference(Util.TARGET_CAR_SPEED, obd.getTargetCarSpeed());
+            Util.savePreference(Util.TARGET_THROTTLING_VALUE, obd.getTargetThrottlingValue());
+        }
 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
