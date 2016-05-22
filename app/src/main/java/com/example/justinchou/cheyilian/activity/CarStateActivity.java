@@ -8,19 +8,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.justinchou.cheyilian.CheyilianApplication;
 import com.example.justinchou.cheyilian.R;
-import com.example.justinchou.cheyilian.databinding.CarStateBinding;
 import com.example.justinchou.cheyilian.model.Obd;
 import com.example.justinchou.cheyilian.service.BluetoothLeService;
-import com.example.justinchou.cheyilian.service.DBService;
 import com.example.justinchou.cheyilian.util.Util;
 
 import org.json.JSONException;
@@ -47,9 +46,12 @@ public class CarStateActivity extends BaseActivity {
     private String mDeviceName;
     private String mDeviceAddress;
 
-    private Obd obdDevice;
-    private CarStateBinding binding;
-
+    @InjectView(R.id.txt_rotating_speed)
+    TextView txtRotatingSpeed;
+    @InjectView(R.id.txt_car_speed)
+    TextView txtCarSpeed;
+    @InjectView(R.id.txt_throttling_value)
+    TextView txtThrottlingValue;
     @InjectView(R.id.btn_profile)
     Button btnProfile;
     @InjectView(R.id.btn_setting)
@@ -124,21 +126,24 @@ public class CarStateActivity extends BaseActivity {
                     switch (type) {
                         case Util.ROTATING_SPEED_CONTROL:
                             Util.savePreference(Util.ROTATING_SPEED, Double.toString(value));
-                            obdDevice.setRotatingSpeed(Double.toString(value));
                             break;
                         case Util.CAR_SPEED_CONTROL:
                             Util.savePreference(Util.CAR_SPEED, Double.toString(value));
-                            obdDevice.setCarSpeed(Double.toString(value));
                             break;
                         case Util.THROTTLING_VALUE_CONTROL:
                             Util.savePreference(Util.THROTTLING_VALUE, Double.toString(value));
-                            obdDevice.setTargetCarSpeed(Double.toString(value));
                             break;
                     }
+                    Intent dataChangeIntent = new Intent(Util.ACTION_DATA_CHANGED);
+                    sendBroadcast(dataChangeIntent);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+            } else if (Util.ACTION_DATA_CHANGED.equals(action)) {
+                txtRotatingSpeed.setText(Util.getPreference(Util.ROTATING_SPEED));
+                txtCarSpeed.setText(Util.getPreference(Util.CAR_SPEED));
+                txtThrottlingValue.setText(Util.getPreference(Util.THROTTLING_VALUE));
             }
         }
     };
@@ -146,8 +151,7 @@ public class CarStateActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = DataBindingUtil.setContentView(this, R.layout.car_state);
+        setContentView(R.layout.car_state);
 
         ButterKnife.inject(this);
 
@@ -181,6 +185,7 @@ public class CarStateActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CheyilianApplication.getContext(), SettingActivity.class);
+                intent.putExtra(SettingActivity.DEVICE_NUMBER, Util.getPreference(Util.DEVICE_NUMBER));
                 startActivity(intent);
             }
         });
@@ -190,10 +195,9 @@ public class CarStateActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        // Data binding
-        obdDevice = new Obd();
-        binding.setObd(obdDevice);
-        obdDevice.setCarSpeed(Util.getPreference(Util.CAR_SPEED));
+        txtRotatingSpeed.setText(Util.getPreference(Util.ROTATING_SPEED));
+        txtCarSpeed.setText(Util.getPreference(Util.CAR_SPEED));
+        txtThrottlingValue.setText(Util.getPreference(Util.THROTTLING_VALUE));
 
         registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         if (mBluetoothLeService != null) {
@@ -213,6 +217,7 @@ public class CarStateActivity extends BaseActivity {
         super.onDestroy();
         unbindService(mServiceConnection);
         mBluetoothLeService = null;
+        Util.clearPreference();
     }
 
     private static IntentFilter makeGattUpdateIntentFilter() {
@@ -221,6 +226,7 @@ public class CarStateActivity extends BaseActivity {
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(Util.ACTION_DATA_CHANGED);
         return intentFilter;
     }
 

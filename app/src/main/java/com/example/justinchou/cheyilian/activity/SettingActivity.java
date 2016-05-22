@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -14,7 +16,9 @@ import android.widget.Toast;
 
 import com.example.justinchou.cheyilian.CheyilianApplication;
 import com.example.justinchou.cheyilian.R;
+import com.example.justinchou.cheyilian.model.Obd;
 import com.example.justinchou.cheyilian.service.BluetoothLeService;
+import com.example.justinchou.cheyilian.service.DBService;
 import com.example.justinchou.cheyilian.util.Util;
 
 import org.json.JSONException;
@@ -28,6 +32,8 @@ import butterknife.InjectView;
  * Set whether to connect the obd device, rotating speed, car speed, throttling valve.
  */
 public class SettingActivity extends BaseActivity {
+
+    public static final String DEVICE_NUMBER = "device_number";
 
     @InjectView(R.id.txt_connection_state)
     TextView txtConnectionState;
@@ -50,6 +56,11 @@ public class SettingActivity extends BaseActivity {
     @InjectView(R.id.et_throttling_valve)
     EditText etThrottlingValve;
 
+    private static final int AUTO_CONTROL_SUCCESS = 1;
+    private static final int SEND_TIME_DELAY = 500;
+    private Handler mHandler;
+    private String deviceNumber;
+
     private final BroadcastReceiver mConnectionStateChangeReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -70,6 +81,12 @@ public class SettingActivity extends BaseActivity {
         setContentView(R.layout.setting);
 
         ButterKnife.inject(this);
+
+        mHandler = new Handler();
+
+        etRotatingSpeed.setText(Util.getPreference(Util.TARGET_ROTATING_SPEED));
+        etCarSpeed.setText(Util.getPreference(Util.TARGET_CAR_SPEED));
+        etThrottlingValve.setText(Util.getPreference(Util.TARGET_THROTTLING_VALUE));
 
         swDeviceOn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -108,25 +125,42 @@ public class SettingActivity extends BaseActivity {
                                 Util.savePreference(Util.TARGET_ROTATING_SPEED, targetRotatingSpeed);
                                 JSONObject message = new JSONObject();
                                 message.put(Util.TRANSFER_DATA, Util.ROTATING_SPEED_CONTROL);
-                                message.put(Util.VALUE_TRANSFERED, targetRotatingSpeed);
+                                message.put(Util.VALUE_TRANSFERED, Double.parseDouble(targetRotatingSpeed));
                                 CarStateActivity.sendBleMessage(message.toString());
                             }
                             if (cbCarSpeedControl.isChecked()) {
                                 String targetCarSpeed = etCarSpeed.getText().toString();
                                 Util.savePreference(Util.TARGET_CAR_SPEED, targetCarSpeed);
-                                JSONObject message = new JSONObject();
+                                final JSONObject message = new JSONObject();
                                 message.put(Util.TRANSFER_DATA, Util.CAR_SPEED_CONTROL);
-                                message.put(Util.VALUE_TRANSFERED, targetCarSpeed);
-                                CarStateActivity.sendBleMessage(message.toString());
+                                message.put(Util.VALUE_TRANSFERED, Double.parseDouble(targetCarSpeed));
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        CarStateActivity.sendBleMessage(message.toString());
+
+                                    }
+                                }, SEND_TIME_DELAY);
                             }
                             if (cbThrottlingValveControl.isChecked()) {
                                 String targetThrottlingValve = etThrottlingValve.getText().toString();
                                 Util.savePreference(Util.TARGET_THROTTLING_VALUE, targetThrottlingValve);
-                                JSONObject message = new JSONObject();
+                                final JSONObject message = new JSONObject();
                                 message.put(Util.TRANSFER_DATA, Util.THROTTLING_VALUE_CONTROL);
-                                message.put(Util.VALUE_TRANSFERED, targetThrottlingValve);
-                                CarStateActivity.sendBleMessage(message.toString());
+                                message.put(Util.VALUE_TRANSFERED, Double.parseDouble(targetThrottlingValve));
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        CarStateActivity.sendBleMessage(message.toString());
+                                    }
+                                }, SEND_TIME_DELAY * 2);
                             }
+                            cbRotatingSpeedControl.setEnabled(false);
+                            cbCarSpeedControl.setEnabled(false);
+                            cbThrottlingValveControl.setEnabled(false);
+                            etRotatingSpeed.setEnabled(false);
+                            etCarSpeed.setEnabled(false);
+                            etThrottlingValve.setEnabled(false);
                             Toast.makeText(CheyilianApplication.getContext(), "自动控制设置成功", Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -135,6 +169,13 @@ public class SettingActivity extends BaseActivity {
                         Toast.makeText(CheyilianApplication.getContext(), "请选择控制模式", Toast.LENGTH_SHORT).show();
                         swAutoControl.setChecked(false);
                     }
+                } else {
+                    cbRotatingSpeedControl.setEnabled(true);
+                    cbCarSpeedControl.setEnabled(true);
+                    cbThrottlingValveControl.setEnabled(true);
+                    etRotatingSpeed.setEnabled(true);
+                    etCarSpeed.setEnabled(true);
+                    etThrottlingValve.setEnabled(true);
                 }
             }
         });

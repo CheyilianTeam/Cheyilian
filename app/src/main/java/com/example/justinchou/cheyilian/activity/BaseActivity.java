@@ -14,11 +14,12 @@ import com.example.justinchou.cheyilian.util.Util;
  */
 public class BaseActivity extends AppCompatActivity {
 
-    DBService dbService = new DBService(this);
+    DBService dbService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbService = new DBService(this);
         ActivityCollector.addActivity(this);
         Log.i("BaseActivity", "add activity");
     }

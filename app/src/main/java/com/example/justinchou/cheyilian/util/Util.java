@@ -26,6 +26,8 @@ import okhttp3.Response;
  */
 public class Util {
 
+    public static final String ACTION_DATA_CHANGED = "DATA_CHANGE_ACTION";
+
     public static final String CONNECTION_STATE = "connectionState";
     public static final String STATE_CONNECTED = "connected";
     public static final String STATE_DISCONNECTED = "disconnected";
@@ -117,14 +119,14 @@ public class Util {
     }
 
     public static boolean scanValidation(byte[] scanRecord) {
-//        if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
-//        return false;
-        return true;
+        if (scanRecord[7] == 3 && scanRecord[8] == 'c' && scanRecord[9] == 'y' && scanRecord[10] == 'l') return true;
+        return false;
+//        return true;
     }
 
     public static String getPreference(String key) {
         SharedPreferences pref = CheyilianApplication.getContext().getSharedPreferences(SHAREDPREFERENCE_FILE_NAME, Context.MODE_PRIVATE);
-        String value = pref.getString(key, "none");
+        String value = pref.getString(key, "0");
         Log.i("Util", "Get preference: " + value);
         return value;
     }
@@ -134,6 +136,13 @@ public class Util {
         editor.putString(key, value);
         editor.commit();
         Log.i("Util", "Put preference: " + key + " " + value);
+    }
+
+    public static void clearPreference() {
+        SharedPreferences.Editor editor = CheyilianApplication.getContext().getSharedPreferences(SHAREDPREFERENCE_FILE_NAME, Context.MODE_PRIVATE).edit();
+        editor.clear();
+        editor.commit();
+        Log.i("Util", "Clear preference");
     }
 
 }

@@ -18,7 +18,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS obd (id AUTO_INCREMENT, deviceName TEXT, deviceNumber TEXT, targetRotatingSpeed TEXT, targetCarSpeed TEXT, targetThrottlingValue TEXT");
+        db.execSQL("CREATE TABLE IF NOT EXISTS obd (deviceName TEXT, deviceNumber TEXT, targetRotatingSpeed TEXT, targetCarSpeed TEXT, targetThrottlingValue TEXT, PRIMARY KEY(deviceNumber))");
     }
 
     @Override

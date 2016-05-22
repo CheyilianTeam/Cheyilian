@@ -5,8 +5,10 @@
     <string name="error_bluetooth_not_supported">不支持蓝牙</string>
     <string name="car_speed">车速</string>
     <string name="rotating_speed">转速</string>
+    <string name="throttling_valve">气节门</string>
     <string name="speed_unit">km/h</string>
     <string name="rotating_speed_unit">转/分</string>
+    <string name="throttling_valve_unit">%</string>
     <string name="setting">设置</string>
     <string name="profile">个人中心</string>
     <!--setting layout-->
