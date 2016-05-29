@@ -24,7 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity"/>
+        <activity
+            android:name=".activity.LoginActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".activity.MyTabActivity"/>
         <activity android:name=".activity.BindActivity"/>
         <activity android:name=".activity.CarStateActivity" android:launchMode="singleTask"/>
         <activity android:name=".activity.SettingActivity"/>

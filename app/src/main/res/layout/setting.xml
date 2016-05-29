@@ -1,164 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <data>
-        <variable name="obd" type="com.example.justinchou.cheyilian.model.Obd"/>
-    </data>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c2">
 
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/c3"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center_vertical"
+        android:padding="10dp">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/obd_device"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:layout_weight="1"/>
 
-            <TextView android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/obd_device"
-                android:layout_weight="1"/>
-
-            <TextView android:id="@+id/txt_connection_state"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/disconnected"
-                android:layout_weight="1"
-                android:gravity="right" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/device_on"
-                android:layout_weight="1"/>
-
-            <Switch android:id="@+id/sw_device_on"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/device_off"
-                android:layout_weight="1"/>
-
-            <Switch android:id="@+id/sw_device_off"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/auto_control"
-                android:layout_weight="1"/>
-
-            <Switch android:id="@+id/sw_auto_control"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView android:id="@+id/txt_connection_state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:baselineAligned="false">
-
-            <CheckBox android:id="@+id/cb_rotating_speed_control"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rotating_speed_control"/>
-
-            <EditText android:id="@+id/et_rotating_speed"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:hint="@{obd.rotatingSpeed}"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/rotating_speed_unit"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/auto_open"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <CheckBox android:id="@+id/cb_car_speed_control"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/car_speed_control"/>
-
-            <EditText android:id="@+id/et_car_speed"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:hint="@{obd.carSpeed}"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/speed_unit"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/auto_open"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <CheckBox android:id="@+id/cb_throttling_valve_control"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/throttling_valve_control"/>
-
-            <EditText android:id="@+id/et_throttling_valve"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:hint="@{obd.throttlingValue}"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/speed_unit"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/auto_open"/>
-
-        </LinearLayout>
+            android:text="@string/disconnected"
+            android:layout_weight="1"
+            android:gravity="right" />
 
     </LinearLayout>
 
-</layout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/c3"
+        android:gravity="center_vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/device_on"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:layout_weight="1"/>
+
+        <Switch android:id="@+id/sw_device_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/c3"
+        android:gravity="center_vertical"
+        android:padding="10dp">
+
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/device_off"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:layout_weight="1"/>
+
+        <Switch android:id="@+id/sw_device_off"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/c3"
+        android:gravity="center_vertical"
+        android:padding="10dp">
+
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auto_control"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:layout_weight="1"/>
+
+        <Switch android:id="@+id/sw_auto_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:background="@color/c4"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <CheckBox android:id="@+id/cb_rotating_speed_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:layout_marginLeft="20dp"
+            android:text="@string/rotating_speed_control"/>
+
+        <EditText android:id="@+id/et_rotating_speed"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:text="@string/rotating_speed_unit"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:text="@string/auto_open"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c4"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <CheckBox android:id="@+id/cb_car_speed_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:layout_marginLeft="20dp"
+            android:text="@string/car_speed_control"/>
+
+        <EditText android:id="@+id/et_car_speed"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:text="@string/speed_unit"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:text="@string/auto_open"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/c4"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <CheckBox android:id="@+id/cb_throttling_valve_control"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:layout_marginLeft="20dp"
+            android:text="@string/throttling_valve_control"/>
+
+        <EditText android:id="@+id/et_throttling_valve"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:text="@string/speed_unit"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#fff"
+            android:text="@string/auto_open"/>
+
+    </LinearLayout>
+
+</LinearLayout>

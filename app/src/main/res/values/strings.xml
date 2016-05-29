@@ -11,6 +11,8 @@
     <string name="throttling_valve_unit">%</string>
     <string name="setting">设置</string>
     <string name="profile">个人中心</string>
+    <!--start layout-->
+    <string name="slogan">专注驰骋、掌控未来、进无止境</string>
     <!--setting layout-->
     <string name="obd_device">OBD设备</string>
     <string name="device_on">设备开启</string>
@@ -25,7 +27,7 @@
     <!--login layout-->
     <string name="enter_phone_number">请输入手机号</string>
     <string name="enter_password">请输入密码</string>
-    <string name="login">登陆</string>
+    <string name="login">登录</string>
     <string name="forget_password">忘记密码</string>
     <string name="register_account">注册新账号</string>
 </resources>

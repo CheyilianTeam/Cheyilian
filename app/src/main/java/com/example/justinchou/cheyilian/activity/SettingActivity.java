@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -18,7 +17,6 @@ import com.example.justinchou.cheyilian.CheyilianApplication;
 import com.example.justinchou.cheyilian.R;
 import com.example.justinchou.cheyilian.model.Obd;
 import com.example.justinchou.cheyilian.service.BluetoothLeService;
-import com.example.justinchou.cheyilian.service.DBService;
 import com.example.justinchou.cheyilian.util.Util;
 
 import org.json.JSONException;
@@ -67,10 +65,10 @@ public class SettingActivity extends BaseActivity {
             String action = intent.getAction();
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 Util.savePreference(Util.CONNECTION_STATE, Util.STATE_CONNECTED);
-                txtConnectionState.setText(Util.STATE_CONNECTED);
+                txtConnectionState.setText("已连接");
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 Util.savePreference(Util.CONNECTION_STATE, Util.STATE_DISCONNECTED);
-                txtConnectionState.setText(Util.STATE_DISCONNECTED);
+                txtConnectionState.setText("未连接");
             }
         }
     };
@@ -84,6 +82,14 @@ public class SettingActivity extends BaseActivity {
 
         mHandler = new Handler();
 
+        // Get data from the database
+        Obd obd = dbService.find(Util.getPreference(Util.DEVICE_NUMBER));
+        if (obd != null) {
+            Util.savePreference(Util.TARGET_ROTATING_SPEED, obd.getTargetRotatingSpeed());
+            Util.savePreference(Util.TARGET_CAR_SPEED, obd.getTargetCarSpeed());
+            Util.savePreference(Util.TARGET_THROTTLING_VALUE, obd.getTargetThrottlingValue());
+        }
+
         etRotatingSpeed.setText(Util.getPreference(Util.TARGET_ROTATING_SPEED));
         etCarSpeed.setText(Util.getPreference(Util.TARGET_CAR_SPEED));
         etThrottlingValve.setText(Util.getPreference(Util.TARGET_THROTTLING_VALUE));
@@ -94,7 +100,7 @@ public class SettingActivity extends BaseActivity {
                 try {
                     JSONObject message = new JSONObject();
                     message.put(Util.CONTROL_COMMAND, Util.COMMAND_ON);
-                    CarStateActivity.sendBleMessage(message.toString());
+                    MyTabActivity.sendBleMessage(message.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -107,7 +113,7 @@ public class SettingActivity extends BaseActivity {
                 try {
                     JSONObject message = new JSONObject();
                     message.put(Util.CONTROL_COMMAND, Util.COMMAND_OFF);
-                    CarStateActivity.sendBleMessage(message.toString());
+                    MyTabActivity.sendBleMessage(message.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -126,7 +132,7 @@ public class SettingActivity extends BaseActivity {
                                 JSONObject message = new JSONObject();
                                 message.put(Util.TRANSFER_DATA, Util.ROTATING_SPEED_CONTROL);
                                 message.put(Util.VALUE_TRANSFERED, Double.parseDouble(targetRotatingSpeed));
-                                CarStateActivity.sendBleMessage(message.toString());
+                                MyTabActivity.sendBleMessage(message.toString());
                             }
                             if (cbCarSpeedControl.isChecked()) {
                                 String targetCarSpeed = etCarSpeed.getText().toString();
@@ -137,7 +143,7 @@ public class SettingActivity extends BaseActivity {
                                 mHandler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        CarStateActivity.sendBleMessage(message.toString());
+                                        MyTabActivity.sendBleMessage(message.toString());
 
                                     }
                                 }, SEND_TIME_DELAY);
@@ -151,7 +157,7 @@ public class SettingActivity extends BaseActivity {
                                 mHandler.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        CarStateActivity.sendBleMessage(message.toString());
+                                        MyTabActivity.sendBleMessage(message.toString());
                                     }
                                 }, SEND_TIME_DELAY * 2);
                             }

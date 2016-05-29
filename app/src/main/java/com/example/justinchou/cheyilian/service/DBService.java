@@ -36,11 +36,11 @@ public class DBService {
         Cursor cursor = db.rawQuery("SELECT * FROM obd WHERE deviceNumber = ?",new String[]{deviceNumber});
         while(cursor.moveToNext()) {
             obd = new Obd();
-            obd.setDeviceName(cursor.getString(1));
-            obd.setDeviceNumber(cursor.getString(2));
-            obd.setTargetRotatingSpeed(cursor.getString(3));
-            obd.setTargetCarSpeed(cursor.getString(4));
-            obd.setTargetThrottlingValue(cursor.getString(5));
+            obd.setDeviceName(cursor.getString(0));
+            obd.setDeviceNumber(cursor.getString(1));
+            obd.setTargetRotatingSpeed(cursor.getString(2));
+            obd.setTargetCarSpeed(cursor.getString(3));
+            obd.setTargetThrottlingValue(cursor.getString(4));
             Log.i("Database", "Find obd: " + obd.getDeviceName() + " " + obd.getDeviceNumber() + " " +
             obd.getTargetRotatingSpeed() + " " + obd.getTargetCarSpeed() + " " + obd.getTargetThrottlingValue());
         }

@@ -1,6 +1,6 @@
 package com.example.justinchou.cheyilian.activity;
 
-import android.app.Activity;
+import android.app.*;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -107,9 +107,10 @@ public class BindActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
                 if (device == null) return;
-                Intent intent = new Intent(CheyilianApplication.getContext(), CarStateActivity.class);
-                intent.putExtra(CarStateActivity.EXTRAS_DEVICE_NAME, device.getName());
-                intent.putExtra(CarStateActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
+                Util.clearPreference();
+                Intent intent = new Intent(CheyilianApplication.getContext(), MyTabActivity.class);
+                Util.savePreference(Util.DEVICE_NAME, device.getName());
+                Util.savePreference(Util.DEVICE_NUMBER, device.getAddress());
                 if (mScanning) {
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
                     mScanning = false;

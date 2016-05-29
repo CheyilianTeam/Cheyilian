@@ -33,8 +33,8 @@ public class BaseActivity extends AppCompatActivity {
         obd.setDeviceNumber(Util.getPreference(Util.DEVICE_NUMBER));
         obd.setTargetRotatingSpeed(Util.getPreference(Util.TARGET_ROTATING_SPEED));
         obd.setTargetCarSpeed(Util.getPreference(Util.TARGET_CAR_SPEED));
-        obd.setTargetThrottlingValue(Util.TARGET_THROTTLING_VALUE);
-        dbService.save(obd);
+        obd.setTargetThrottlingValue(Util.getPreference(Util.TARGET_THROTTLING_VALUE));
+        if (obd.getDeviceNumber() != "0") dbService.save(obd);
         ActivityCollector.removeActivity(this);
         Log.i("BaseActivity", "remove activity");
     }
