@@ -2,6 +2,8 @@ package com.example.justinchou.cheyilian.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
@@ -13,6 +15,7 @@ import com.example.justinchou.cheyilian.CheyilianApplication;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -143,6 +146,16 @@ public class Util {
         editor.clear();
         editor.commit();
         Log.i("Util", "Clear preference");
+    }
+
+    public static int[] getImageSize(Context context, int resId) {
+        int[] size = new int[2];
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(context.getResources(), resId, options);
+        size[0] = options.outWidth;
+        size[1] = options.outHeight;
+        return size;
     }
 
 }

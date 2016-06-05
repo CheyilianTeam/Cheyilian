@@ -1,26 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/bg_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:id="@+id/img_pointer"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="140dp"
+        android:layout_marginLeft="80dp"
+        android:src="@drawable/pointer"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/speed_unit"
+        android:textSize="20dp"
+        android:textColor="#7f7f7f"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="280dp"/>
+
+    <TextView android:id="@+id/txt_car_speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40dp"
+        android:textColor="#ffd40c"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="320dp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/car_speed"
         android:textSize="24dp"
-        android:textColor="#7f7f7f"/>
+        android:textColor="#7f7f7f"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="380dp"/>
 
-    <TextView android:id="@+id/txt_car_speed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24dp"
-        android:textColor="#ffd40c"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/speed_unit"
-        android:textSize="24dp"
-        android:textColor="#7f7f7f"/>
-
-</LinearLayout>
+</RelativeLayout>

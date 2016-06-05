@@ -1,5 +1,8 @@
 package com.example.justinchou.cheyilian.activity;
 
+import android.app.Activity;
+import android.app.ActivityGroup;
+import android.app.TabActivity;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
@@ -12,7 +15,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import com.example.justinchou.cheyilian.R;
 import com.example.justinchou.cheyilian.service.BluetoothLeService;
@@ -24,7 +30,7 @@ import org.json.JSONObject;
 /**
  * Created by J on 2016/5/29.
  */
-public class MyTabActivity extends android.app.TabActivity {
+public class MyTabActivity extends ActivityGroup {
 
     private BluetoothGattService mPrimaryService;
     private static BluetoothGattCharacteristic mPrimaryCharacteristic;
@@ -116,14 +122,27 @@ public class MyTabActivity extends android.app.TabActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.my_tab);
 
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
-        TabHost tabHost = getTabHost();
-        LayoutInflater.from(this).inflate(R.layout.my_tab, tabHost.getTabContentView(), true);
-        tabHost.addTab(tabHost.newTabSpec("排气控制").setIndicator("排气控制").setContent(new Intent(this, CarStateActivity.class)));
-        tabHost.addTab(tabHost.newTabSpec("我的").setIndicator("我的").setContent(new Intent(this, ProfileActivity.class)));
+        View controlTab = LayoutInflater.from(this).inflate(R.layout.tab_style, null);
+        ImageView imageControl = (ImageView) controlTab.findViewById(R.id.img_tab);
+        TextView controlTabLabel = (TextView) controlTab.findViewById(R.id.txt_tab_label);
+        imageControl.setImageResource(R.drawable.control);
+        controlTabLabel.setText("排气控制");
+
+        View mineTab = LayoutInflater.from(this).inflate(R.layout.tab_style, null);
+        ImageView imageMine = (ImageView) mineTab.findViewById(R.id.img_tab);
+        TextView mineTabLabel = (TextView) mineTab.findViewById(R.id.txt_tab_label);
+        imageMine.setImageResource(R.drawable.mine);
+        mineTabLabel.setText("我的");
+
+        TabHost tabHost = (TabHost) findViewById(R.id.tabhost);
+        tabHost.setup(getLocalActivityManager());
+        tabHost.addTab(tabHost.newTabSpec("排气控制").setIndicator(controlTab).setContent(new Intent(this, CarStateActivity.class)));
+        tabHost.addTab(tabHost.newTabSpec("我的").setIndicator(mineTab).setContent(new Intent(this, ProfileActivity.class)));
     }
 
     @Override

@@ -10,10 +10,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.justinchou.cheyilian.R;
 import com.example.justinchou.cheyilian.util.Util;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by J on 2016/5/29.
@@ -21,6 +23,8 @@ import com.example.justinchou.cheyilian.util.Util;
 public class ThrottlingValueFragment extends Fragment {
 
     TextView txtThrottlingValue;
+    ImageView bgImage;
+    int[] size;
 
     private final BroadcastReceiver dataChangeReceiver = new BroadcastReceiver() {
         @Override
@@ -47,6 +51,9 @@ public class ThrottlingValueFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getActivity().registerReceiver(dataChangeReceiver, dataChangeIntentFilter());
         View rootView = inflater.inflate(R.layout.throttling_value_fragment, container, false);
+        bgImage = (ImageView) rootView.findViewById(R.id.bg_image);
+        size = Util.getImageSize(getContext(), R.drawable.throttling_valve_dashboard);
+        Picasso.with(getContext()).load(R.drawable.throttling_valve_dashboard).resize(size[0] / 2, size[1] / 2).into(bgImage);
         txtThrottlingValue = (TextView) rootView.findViewById(R.id.txt_throttling_value);
         txtThrottlingValue.setText(Util.getPreference(Util.THROTTLING_VALUE));
         return rootView;
